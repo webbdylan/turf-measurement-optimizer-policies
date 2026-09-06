@@ -47,3 +47,33 @@ footer {
   color: var(--muted);
   font-size: 0.85rem;
 }
+
+form { display: flex; flex-direction: column; gap: 14px; }
+label { font-weight: 600; font-size: 0.92rem; }
+input[type="text"], input[type="email"], select, textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+textarea { resize: vertical; min-height: 90px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.honeypot { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+button[type="submit"] {
+  align-self: flex-start;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+button[type="submit"]:disabled { opacity: 0.6; cursor: default; }
+.form-status { font-size: 0.9rem; margin-top: 4px; }
+.form-status.ok { color: var(--accent); }
+.form-status.err { color: #c0392b; }

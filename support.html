@@ -11,12 +11,44 @@
   <h1>Support</h1>
   <p class="meta">Turf Measurement Optimizer &middot; Maintained by Saliko Solutions</p>
 
-  <p>Running into an issue, have a feature request, or just want to say the app saved you a trip back to the truck for a tape measure? Get in touch.</p>
+  <p>Running into an issue, have a feature request, or just want to say the app saved you a trip back to the truck for a tape measure? Fill this out and it lands straight in our inbox.</p>
 
-  <div class="card">
-    <p><strong>Email:</strong> <a href="mailto:webb.dylan@gmail.com">webb.dylan@gmail.com</a></p>
-    <p>Include your device model and iOS version if you're reporting a bug — it helps track things down faster.</p>
-  </div>
+  <form id="contact-form">
+    <div class="field">
+      <label for="contact">Contact info (email or phone) <span aria-hidden="true">*</span></label>
+      <input type="text" id="contact" name="contact" required autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label for="reason">Reason for contact <span aria-hidden="true">*</span></label>
+      <select id="reason" name="reason" required>
+        <option value="" disabled selected>Choose one</option>
+        <option value="Bug report">Bug report</option>
+        <option value="Feature request">Feature request</option>
+        <option value="Question">General question</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="details">Details</label>
+      <textarea id="details" name="details" placeholder="What's going on? Include your device model and iOS version if it's a bug."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="check">Quick human check: what is 4 + 3? <span aria-hidden="true">*</span></label>
+      <input type="text" id="check" name="check" required autocomplete="off" inputmode="numeric">
+    </div>
+
+    <!-- honeypot: hidden from real users, left blank; bots often fill it -->
+    <div class="field honeypot" aria-hidden="true">
+      <label for="website">Website</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button type="submit" id="submit-btn">Send</button>
+    <p class="form-status" id="form-status" role="status"></p>
+  </form>
 
   <h2>Common questions</h2>
 
@@ -31,5 +63,47 @@
 
   <footer>Turf Measurement Optimizer is maintained by Saliko Solutions.</footer>
 </main>
+
+<script>
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbxBpBgQyjBC8kRcRIBI5WQzl9P0xxomsSmLgUyxEAFFKd5gsGN2QmQ3gNFeq9WhOMA/exec";
+
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("form-status");
+  const submitBtn = document.getElementById("submit-btn");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const check = document.getElementById("check").value.trim();
+    if (check !== "7") {
+      status.textContent = "That human check didn't check out — try again.";
+      status.className = "form-status err";
+      return;
+    }
+
+    submitBtn.disabled = true;
+    status.textContent = "Sending…";
+    status.className = "form-status";
+
+    const data = new URLSearchParams(new FormData(form));
+
+    fetch(ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      body: data
+    })
+      .then(function () {
+        status.textContent = "Thanks — we got it and will follow up soon.";
+        status.className = "form-status ok";
+        form.reset();
+        submitBtn.disabled = false;
+      })
+      .catch(function () {
+        status.textContent = "Something went wrong sending that. Please try again in a bit.";
+        status.className = "form-status err";
+        submitBtn.disabled = false;
+      });
+  });
+</script>
 </body>
 </html>
